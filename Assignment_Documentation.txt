@@ -1,0 +1,91 @@
+# Kigali City Directory Assignment Documentation
+
+## 1. Implementation Reflection
+
+Integrating Firebase with Flutter was a valuable learning experience. The process involved setting up Firebase Authentication and Cloud Firestore, configuring the app for both Android and iOS, and ensuring secure, real-time data flow between the backend and the user interface.
+
+### Challenges & Solutions
+- **Dependency Version Conflicts:**
+  - *Error:* While running `flutter pub get`, I encountered version solving failures, especially with `url_launcher` and Firebase packages.
+  - *Solution:* I resolved this by specifying compatible versions in `pubspec.yaml` and running `flutter pub get` again.
+- **Firebase Initialization Error:**
+  - *Error:* The app crashed on startup with a message about missing Firebase initialization.
+  - *Solution:* I ensured `WidgetsFlutterBinding.ensureInitialized()` and `await Firebase.initializeApp()` were called in `main.dart` before running the app.
+- **Firestore Security Rules:**
+  - *Error:* Permission denied errors when reading/writing listings.
+  - *Solution:* I updated Firestore rules to allow authenticated users to read all listings and write only their own.
+
+*Screenshots of errors and their resolutions should be inserted here.*
+
+## 2. GitHub Repository
+
+[GitHub Repository Link](https://github.com/your-username/kigali-city-directory)
+
+## 3. Demo Video
+
+[Demo Video Link](https://your-demo-video-link)
+
+The demo video covers:
+- User authentication (signup, login, email verification)
+- Creating, editing, and deleting listings
+- Searching and filtering listings
+- Viewing listing details and map integration
+- Launching navigation directions
+- Real-time updates in Firebase Console
+- Code walkthrough (models, services, providers, UI)
+
+## 4. Design Summary
+
+### Firestore Database Structure
+- **users** (collection)
+  - [uid] (document)
+    - email: string
+    - displayName: string
+    - emailVerified: bool
+- **listings** (collection)
+  - [listingId] (document)
+    - name: string
+    - category: string
+    - address: string
+    - contactNumber: string
+    - description: string
+    - latitude: double
+    - longitude: double
+    - createdBy: string (user UID)
+    - timestamp: Timestamp
+
+### Listings Model
+```
+class Listing {
+  final String id;
+  final String name;
+  final String category;
+  final String address;
+  final String contactNumber;
+  final String description;
+  final double latitude;
+  final double longitude;
+  final String createdBy;
+  final Timestamp timestamp;
+  // ...
+}
+```
+
+### State Management
+- **Provider** is used for all app state (authentication, listings, settings).
+- All Firestore operations are handled in service/provider layers, never directly in UI widgets.
+- UI updates automatically when Firestore data changes.
+
+### Design Trade-offs & Technical Challenges
+- Provider was chosen for its simplicity and real-time update capabilities.
+- Ensuring all Firestore logic was outside the UI required careful separation of concerns.
+- Handling asynchronous state and error management was essential for a smooth user experience.
+
+### Screenshots
+- *Insert screenshots of the app UI and Firebase Console here.*
+
+---
+
+**End of Documentation**
+
+*Replace the GitHub and video links, and add your screenshots before submission.*

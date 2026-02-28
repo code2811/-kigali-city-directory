@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/listing.dart';
 
+import '../models/review.dart';
+
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -26,5 +28,36 @@ class FirestoreService {
 
   Future<void> deleteListing(String id) async {
     await _db.collection('listings').doc(id).delete();
+  }
+
+  // --- Review Methods ---
+
+  Stream<List<Review>> getReviews(String listingId) {
+    return _db
+        .collection('listings')
+        .doc(listingId)
+        .collection('reviews')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
+  }
+
+  Future<void> addOrUpdateReview(String listingId, Review review) async {
+    // Use userId as the review document ID to ensure one review per user per listing
+    await _db
+        .collection('listings')
+        .doc(listingId)
+        .collection('reviews')
+        .doc(review.userId)
+        .set(review.toMap());
+  }
+
+  Future<void> deleteReview(String listingId, String userId) async {
+    await _db
+        .collection('listings')
+        .doc(listingId)
+        .collection('reviews')
+        .doc(userId)
+        .delete();
   }
 }
