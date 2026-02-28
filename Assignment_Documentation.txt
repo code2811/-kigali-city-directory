@@ -15,7 +15,7 @@ Integrating Firebase with Flutter was a valuable learning experience. The proces
   - *Error:* Permission denied errors when reading/writing listings.
   - *Solution:* I updated Firestore rules to allow authenticated users to read all listings and write only their own.
 
-*Screenshots of errors and their resolutions should be inserted here.*
+
 
 ## 2. GitHub Repository
 
@@ -88,4 +88,4 @@ class Listing {
 
 **End of Documentation**
 
-*Replace the GitHub and video links, and add your screenshots before submission.*
+
