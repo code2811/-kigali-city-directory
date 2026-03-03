@@ -6,6 +6,8 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  User? get currentUser => _auth.currentUser;
+
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   Future<User?> signUp(String email, String password) async {
@@ -30,6 +32,14 @@ class AuthService {
 
   Future<void> reloadUser() async {
     await _auth.currentUser?.reload();
+    final user = _auth.currentUser;
+    if (user != null) {
+      await _db.collection('users').doc(user.uid).set({
+        'email': user.email ?? '',
+        'displayName': user.displayName ?? '',
+        'emailVerified': user.emailVerified,
+      }, SetOptions(merge: true));
+    }
   }
 
   Future<void> updateUserProfile({String? displayName}) async {
@@ -42,8 +52,19 @@ class AuthService {
   Future<AppUser?> getCurrentUserProfile() async {
     final user = _auth.currentUser;
     if (user == null) return null;
-    final doc = await _db.collection('users').doc(user.uid).get();
-    if (!doc.exists) return null;
-    return AppUser.fromFirestore(doc);
+    final userRef = _db.collection('users').doc(user.uid);
+    final doc = await userRef.get();
+    if (!doc.exists) {
+      await userRef.set({
+        'email': user.email ?? '',
+        'displayName': user.displayName ?? '',
+        'emailVerified': user.emailVerified,
+      });
+      final createdDoc = await userRef.get();
+      return AppUser.fromFirestore(createdDoc);
+    }
+    await userRef.set({'emailVerified': user.emailVerified}, SetOptions(merge: true));
+    final updatedDoc = await userRef.get();
+    return AppUser.fromFirestore(updatedDoc);
   }
 }

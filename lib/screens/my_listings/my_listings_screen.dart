@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/listings_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../models/listing.dart';
 import '../directory/edit_listing_screen.dart';
 
 class MyListingsScreen extends StatefulWidget {
@@ -23,7 +22,7 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
   Widget build(BuildContext context) {
     final listingsProvider = Provider.of<ListingsProvider>(context);
     final user = FirebaseAuth.instance.currentUser;
-    final myListings = listingsProvider.listings.where((l) => l.createdBy == user?.uid).toList();
+    final myListings = listingsProvider.allListings.where((l) => l.createdBy == user?.uid).toList();
     return Scaffold(
       appBar: AppBar(title: const Text('My Listings')),
       body: listingsProvider.isLoading

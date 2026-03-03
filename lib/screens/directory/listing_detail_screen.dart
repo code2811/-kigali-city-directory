@@ -12,13 +12,16 @@ class ListingDetailScreen extends StatelessWidget {
   final Listing listing;
   const ListingDetailScreen({super.key, required this.listing});
 
-  void _launchMaps(double lat, double lng) async {
-    final url = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> _launchMaps(double lat, double lng) async {
+    final uri = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      return;
     }
+
+    throw Exception('Could not launch map navigation');
   }
 
 
@@ -142,14 +145,21 @@ class _AddOrEditReviewButton extends StatelessWidget {
   final Listing listing;
   const _AddOrEditReviewButton({required this.listing});
 
+  Review? _findExistingReview(List<Review> reviews, String? userId) {
+    if (userId == null) return null;
+    for (final review in reviews) {
+      if (review.userId == userId) {
+        return review;
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final reviewsProvider = context.watch<ReviewsProvider>();
-    final existingReview = reviewsProvider.reviews.firstWhere(
-      (r) => r.userId == user?.uid,
-      orElse: () => null,
-    );
+    final existingReview = _findExistingReview(reviewsProvider.reviews, user?.uid);
     return ElevatedButton.icon(
       icon: Icon(existingReview == null ? Icons.rate_review : Icons.edit),
       label: Text(existingReview == null ? 'Add Review' : 'Edit Your Review'),

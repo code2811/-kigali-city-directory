@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/listing.dart';
 import '../services/firestore_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ListingsProvider extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   List<Listing> _listings = [];
   List<Listing> get listings => _filteredListings;
+  List<Listing> get allListings => _listings;
   bool _isLoading = false;
   String? _error;
 
@@ -25,6 +25,7 @@ class ListingsProvider extends ChangeNotifier {
 
   void fetchListings() {
     _isLoading = true;
+    _error = null;
     notifyListeners();
     _firestoreService.getListings().listen((data) {
       _listings = data;
