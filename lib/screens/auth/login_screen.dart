@@ -160,11 +160,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 10),
 
                   // ── Forgot password ──
-                  Align(
+                  const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
                       'Forgot password?',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: _accent,
                         fontWeight: FontWeight.w600,

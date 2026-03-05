@@ -81,7 +81,7 @@ class ListingDetailScreen extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.star, color: Colors.amber),
+                                const Icon(Icons.star, color: Colors.amber),
                                 const SizedBox(width: 4),
                                 Text(
                                   reviewsProvider.averageRating.toStringAsFixed(1),
@@ -122,11 +122,11 @@ class _ReviewList extends StatelessWidget {
     }
     return Column(
       children: reviews.map((review) => ListTile(
-        leading: Icon(Icons.person),
+        leading: const Icon(Icons.person),
         title: Row(
           children: [
-            ...List.generate(review.rating, (i) => Icon(Icons.star, color: Colors.amber, size: 16)),
-            ...List.generate(5 - review.rating, (i) => Icon(Icons.star_border, size: 16)),
+            ...List.generate(review.rating, (i) => const Icon(Icons.star, color: Colors.amber, size: 16)),
+            ...List.generate(5 - review.rating, (i) => const Icon(Icons.star_border, size: 16)),
             const SizedBox(width: 8),
             Text(review.userName, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
