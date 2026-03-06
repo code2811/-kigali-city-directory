@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart'; // Mobile only
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/listing.dart';
@@ -20,57 +20,171 @@ class ListingDetailScreen extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
       return;
     }
-
     throw Exception('Could not launch map navigation');
   }
 
+  Future<void> _openInMaps(double lat, double lng) async {
+    final uri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ReviewsProvider()..fetchReviews(listing.id),
       child: Scaffold(
-        appBar: AppBar(title: Text(listing.name)),
+        appBar: AppBar(
+          title: Text(listing.name),
+          backgroundColor: Colors.green[700],
+          foregroundColor: Colors.white,
+        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 250,
-                child: GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(listing.latitude, listing.longitude),
-                    zoom: 15,
-                  ),
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('location'),
-                      position: LatLng(listing.latitude, listing.longitude),
-                      infoWindow: InfoWindow(title: listing.name),
+              // Map placeholder — works on web and mobile (before emulator is ready)
+              GestureDetector(
+                onTap: () => _openInMaps(listing.latitude, listing.longitude),
+                child: Container(
+                  height: 250,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.green[100]!, Colors.green[200]!],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  },
-                  zoomControlsEnabled: false,
+                  ),
+                  child: Stack(
+                    children: [
+                      // Grid lines to simulate a map
+                      CustomPaint(
+                        size: const Size(double.infinity, 250),
+                        painter: _MapGridPainter(),
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.15),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  const Icon(Icons.location_pin, size: 48, color: Colors.red),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    listing.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${listing.latitude.toStringAsFixed(4)}, ${listing.longitude.toStringAsFixed(4)}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.touch_app, size: 14, color: Colors.green),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Tap to open in Google Maps',
+                                    style: TextStyle(fontSize: 12, color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Category: ${listing.category}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Text('Address: ${listing.address}'),
-                    const SizedBox(height: 8),
-                    Text('Contact: ${listing.contactNumber}'),
-                    const SizedBox(height: 8),
-                    Text('Description: ${listing.description}'),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.navigation),
-                      label: const Text('Navigate'),
-                      onPressed: () => _launchMaps(listing.latitude, listing.longitude),
+                    // Category chip
+                    Chip(
+                      label: Text(
+                        listing.category,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.green[700],
                     ),
+                    const SizedBox(height: 12),
+
+                    // Info cards
+                    _InfoRow(icon: Icons.location_on, label: 'Address', value: listing.address),
+                    const SizedBox(height: 8),
+                    _InfoRow(icon: Icons.phone, label: 'Contact', value: listing.contactNumber),
+                    const SizedBox(height: 8),
+                    _InfoRow(icon: Icons.description, label: 'Description', value: listing.description),
+                    const SizedBox(height: 16),
+
+                    // Navigate button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.navigation),
+                        label: const Text('Get Directions'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[700],
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () => _launchMaps(listing.latitude, listing.longitude),
+                      ),
+                    ),
+
                     const SizedBox(height: 24),
+                    const Divider(),
+                    const SizedBox(height: 8),
+
+                    // Reviews section
+                    const Text(
+                      'Reviews',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+
                     Consumer<ReviewsProvider>(
                       builder: (context, reviewsProvider, _) {
                         if (reviewsProvider.isLoading) {
@@ -85,7 +199,10 @@ class ListingDetailScreen extends StatelessWidget {
                                 const SizedBox(width: 4),
                                 Text(
                                   reviewsProvider.averageRating.toStringAsFixed(1),
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text('(${reviewsProvider.reviewCount} reviews)'),
@@ -110,6 +227,60 @@ class ListingDetailScreen extends StatelessWidget {
   }
 }
 
+// Simple map grid painter for visual effect
+class _MapGridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.green[300]!.withOpacity(0.4)
+      ..strokeWidth = 1;
+
+    for (double x = 0; x < size.width; x += 40) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y < size.height; y += 40) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// Info row widget
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.icon, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.green[700]),
+        const SizedBox(width: 8),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black, fontSize: 14),
+              children: [
+                TextSpan(
+                  text: '$label: ',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(text: value),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ReviewList extends StatelessWidget {
   final String listingId;
   const _ReviewList({required this.listingId});
@@ -121,22 +292,33 @@ class _ReviewList extends StatelessWidget {
       return const Text('No reviews yet. Be the first to review!');
     }
     return Column(
-      children: reviews.map((review) => ListTile(
-        leading: const Icon(Icons.person),
-        title: Row(
-          children: [
-            ...List.generate(review.rating, (i) => const Icon(Icons.star, color: Colors.amber, size: 16)),
-            ...List.generate(5 - review.rating, (i) => const Icon(Icons.star_border, size: 16)),
-            const SizedBox(width: 8),
-            Text(review.userName, style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-        subtitle: Text(review.comment),
-        trailing: Text(
-          '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-      )).toList(),
+      children: reviews
+          .map((review) => ListTile(
+                leading: const Icon(Icons.person),
+                title: Row(
+                  children: [
+                    ...List.generate(
+                      review.rating,
+                      (i) => const Icon(Icons.star, color: Colors.amber, size: 16),
+                    ),
+                    ...List.generate(
+                      5 - review.rating,
+                      (i) => const Icon(Icons.star_border, size: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      review.userName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                subtitle: Text(review.comment),
+                trailing: Text(
+                  '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ))
+          .toList(),
     );
   }
 }
@@ -148,9 +330,7 @@ class _AddOrEditReviewButton extends StatelessWidget {
   Review? _findExistingReview(List<Review> reviews, String? userId) {
     if (userId == null) return null;
     for (final review in reviews) {
-      if (review.userId == userId) {
-        return review;
-      }
+      if (review.userId == userId) return review;
     }
     return null;
   }
@@ -185,7 +365,12 @@ class _ReviewDialog extends StatefulWidget {
   final String userId;
   final String userName;
   final Review? existingReview;
-  const _ReviewDialog({required this.listingId, required this.userId, required this.userName, this.existingReview});
+  const _ReviewDialog({
+    required this.listingId,
+    required this.userId,
+    required this.userName,
+    this.existingReview,
+  });
 
   @override
   State<_ReviewDialog> createState() => _ReviewDialogState();
@@ -213,13 +398,16 @@ class _ReviewDialogState extends State<_ReviewDialog> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(5, (i) => IconButton(
-              icon: Icon(
-                i < _rating ? Icons.star : Icons.star_border,
-                color: Colors.amber,
+            children: List.generate(
+              5,
+              (i) => IconButton(
+                icon: Icon(
+                  i < _rating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                ),
+                onPressed: () => setState(() => _rating = i + 1),
               ),
-              onPressed: () => setState(() => _rating = i + 1),
-            )),
+            ),
           ),
           TextField(
             controller: _controller,
@@ -232,7 +420,9 @@ class _ReviewDialogState extends State<_ReviewDialog> {
         if (widget.existingReview != null)
           TextButton(
             onPressed: () async {
-              await context.read<ReviewsProvider>().deleteReview(widget.listingId, widget.userId);
+              await context
+                  .read<ReviewsProvider>()
+                  .deleteReview(widget.listingId, widget.userId);
               Navigator.of(context).pop();
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -251,7 +441,9 @@ class _ReviewDialogState extends State<_ReviewDialog> {
               comment: _controller.text.trim(),
               timestamp: DateTime.now(),
             );
-            await context.read<ReviewsProvider>().addOrUpdateReview(widget.listingId, review);
+            await context
+                .read<ReviewsProvider>()
+                .addOrUpdateReview(widget.listingId, review);
             Navigator.of(context).pop();
           },
           child: const Text('Submit'),
