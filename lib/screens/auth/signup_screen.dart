@@ -48,7 +48,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   const SizedBox(height: 40),
 
-                  // ── Logo ──
                   Center(
                     child: Column(
                       children: [
@@ -95,7 +94,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 32),
 
-                  // ── Email ──
                   _label('Email'),
                   const SizedBox(height: 6),
                   _inputField(
@@ -108,7 +106,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 16),
 
-                  // ── Password ──
                   _label('Password'),
                   const SizedBox(height: 6),
                   _inputField(
@@ -133,7 +130,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 16),
 
-                  // ── Confirm Password ──
                   _label('Confirm Password'),
                   const SizedBox(height: 6),
                   _inputField(
@@ -158,7 +154,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 20),
 
-                  // ── Verification notice ──
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 10),
@@ -183,7 +178,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 16),
 
-                  // ── Error ──
                   if (auth.error != null)
                     Container(
                       margin: const EdgeInsets.only(bottom: 12),
@@ -210,7 +204,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
 
-                  // ── Sign Up button ──
                   _primaryButton(
                     label: 'Create Account',
                     isLoading: auth.isLoading,
@@ -228,7 +221,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                   const SizedBox(height: 24),
 
-                  // ── Switch to login ──
                   Center(
                     child: GestureDetector(
                       onTap: () =>

@@ -35,8 +35,6 @@ class VerifyEmailScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                // ── Icon ──
                 Container(
                   width: 88,
                   height: 88,
@@ -55,7 +53,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                // ── Title ──
                 const Text(
                   'Verify your\nemail address',
                   textAlign: TextAlign.center,
@@ -70,7 +67,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                // ── Sub ──
                 const Text(
                   'We sent a verification link to your email.\nPlease check your inbox and verify\nbefore continuing.',
                   textAlign: TextAlign.center,
@@ -83,7 +79,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // ── Email box ──
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
@@ -113,7 +108,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                // ── Continue button ──
                 GestureDetector(
                   onTap: () async {
                     await auth.reloadUser();
@@ -166,7 +160,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                // ── Resend button ──
                 GestureDetector(
                   onTap: () async {
                     await user?.sendEmailVerification();
@@ -204,7 +197,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 28),
 
-                // ── Hint text ──
                 const Text(
                   "Didn't receive the email?\nCheck your spam folder or resend.",
                   textAlign: TextAlign.center,
@@ -217,7 +209,6 @@ class VerifyEmailScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                // ── Sign out ──
                 GestureDetector(
                   onTap: () async {
                     await auth.signOut();

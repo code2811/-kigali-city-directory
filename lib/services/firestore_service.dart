@@ -30,8 +30,6 @@ class FirestoreService {
     await _db.collection('listings').doc(id).delete();
   }
 
-  // --- Review Methods ---
-
   Stream<List<Review>> getReviews(String listingId) {
     return _db
         .collection('listings')
@@ -43,7 +41,6 @@ class FirestoreService {
   }
 
   Future<void> addOrUpdateReview(String listingId, Review review) async {
-    // Use userId as the review document ID to ensure one review per user per listing
     await _db
         .collection('listings')
         .doc(listingId)

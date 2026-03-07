@@ -15,9 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _password = '';
   bool _obscurePassword = true;
 
-  // ── Colours ──────────────────────────────────────────────
   static const _bg         = Color(0xFF0A0E1A);
-  static const _surface    = Color(0xFF111827);
   static const _surface2   = Color(0xFF1A2235);
   static const _accent     = Color(0xFF00D4AA);
   static const _textMuted  = Color(0xFF8A9BC0);
@@ -48,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 48),
 
-                  // ── Logo ──
                   Center(
                     child: Column(
                       children: [
@@ -103,7 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 40),
 
-                  // ── Heading ──
                   const Text(
                     'Welcome back',
                     style: TextStyle(
@@ -121,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 32),
 
-                  // ── Email field ──
                   _label('Email'),
                   const SizedBox(height: 6),
                   _inputField(
@@ -134,7 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 16),
 
-                  // ── Password field ──
                   _label('Password'),
                   const SizedBox(height: 6),
                   _inputField(
@@ -159,7 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 10),
 
-                  // ── Forgot password ──
                   const Align(
                     alignment: Alignment.centerRight,
                     child: Text(
@@ -174,7 +167,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 8),
 
-                  // ── Error ──
                   if (auth.error != null)
                     Container(
                       margin: const EdgeInsets.only(bottom: 12),
@@ -201,7 +193,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                  // ── Sign In button ──
                   _primaryButton(
                     label: 'Sign In',
                     isLoading: auth.isLoading,
@@ -225,7 +216,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 24),
 
-                  // ── Switch to signup ──
                   Center(
                     child: GestureDetector(
                       onTap: () =>
@@ -258,8 +248,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  // ── Helpers ─────────────────────────────────────────────
 
   Widget _label(String text) => Text(
         text.toUpperCase(),

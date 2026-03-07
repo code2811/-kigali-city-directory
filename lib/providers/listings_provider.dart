@@ -10,7 +10,6 @@ class ListingsProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
-  // Search and filter state
   String _searchQuery = '';
   String _selectedCategory = 'All';
   List<Listing> _filteredListings = [];

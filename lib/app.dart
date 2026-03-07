@@ -20,7 +20,6 @@ class KigaliCityDirectoryApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ListingsProvider()),
-        // Register ReviewsProvider globally for access in all screens
         ChangeNotifierProvider(create: (_) => ReviewsProvider()),
       ],
       child: MaterialApp(
