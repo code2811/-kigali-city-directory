@@ -10,12 +10,13 @@ class AuthService {
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  Future<User?> signUp(String email, String password) async {
+  Future<User?> signUp(String email, String password, {String? displayName}) async {
     final result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    await result.user?.updateDisplayName(displayName ?? '');
     await result.user?.sendEmailVerification();
     await _db.collection('users').doc(result.user?.uid).set({
       'email': email,
-      'displayName': '',
+      'displayName': displayName ?? '',
       'emailVerified': false,
     });
     return result.user;

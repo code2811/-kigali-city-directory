@@ -11,6 +11,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  String _displayName = '';
   String _email = '';
   String _password = '';
   String _confirmPassword = '';
@@ -75,6 +76,16 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         const SizedBox(height: 12),
                         const Text(
+                        _label('Display Name'),
+                        const SizedBox(height: 6),
+                        _inputField(
+                          hint: 'Your full name',
+                          icon: Icons.person_outline,
+                          onChanged: (v) => _displayName = v,
+                          validator: (v) =>
+                              v != null && v.trim().isNotEmpty ? null : 'Enter your name',
+                        ),
+                        const SizedBox(height: 16),
                           'Create Account',
                           style: TextStyle(
                             fontSize: 22,
@@ -209,7 +220,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     isLoading: auth.isLoading,
                     onTap: () async {
                       if (_formKey.currentState!.validate()) {
-                        await auth.signUp(_email, _password);
+                        await auth.signUp(_email, _password, displayName: _displayName);
                         if (!mounted) return;
                         if (auth.firebaseUser != null) {
                           Navigator.pushReplacementNamed(

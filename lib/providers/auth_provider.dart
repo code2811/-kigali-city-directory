@@ -19,11 +19,11 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password, {String? displayName}) async {
     _setLoading(true);
     try {
       _error = null;
-      final user = await _authService.signUp(email, password);
+      final user = await _authService.signUp(email, password, displayName: displayName);
       _firebaseUser = user;
       await _loadProfile();
     } catch (e) {

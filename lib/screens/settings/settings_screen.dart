@@ -11,6 +11,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = false;
+  String? _notificationStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +26,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             if (user != null) ...[
               Text('Email: ${user.email}'),
-              Text('Display Name: ${user.displayName ?? "Not set"}'),
-              Text('Email Verified: ${user.emailVerified ? "Yes" : "No"}'),
+              Text('Display Name: ${user.displayName?.isNotEmpty == true ? user.displayName : "Not set"}'),
+              Row(
+                children: [
+                  Text('Email Verified: ${user.emailVerified ? "Yes" : "No"}'),
+                  if (!user.emailVerified)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text('Please verify your email!', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                    ),
+                ],
+              ),
               const SizedBox(height: 20),
             ],
             Row(
@@ -36,11 +46,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Switch(
                   value: _notificationsEnabled,
                   onChanged: (val) {
-                    setState(() => _notificationsEnabled = val);
+                    setState(() {
+                      _notificationsEnabled = val;
+                      _notificationStatus = val ? 'Notifications enabled' : 'Notifications disabled';
+                    });
                   },
                 ),
               ],
             ),
+            if (_notificationStatus != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(_notificationStatus!, style: TextStyle(color: Colors.blueGrey)),
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
