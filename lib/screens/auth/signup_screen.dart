@@ -76,16 +76,35 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         const SizedBox(height: 12),
                         const Text(
-                        _label('Display Name'),
-                        const SizedBox(height: 6),
-                        _inputField(
-                          hint: 'Your full name',
-                          icon: Icons.person_outline,
-                          onChanged: (v) => _displayName = v,
-                          validator: (v) =>
-                              v != null && v.trim().isNotEmpty ? null : 'Enter your name',
+                          'Create Account',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: -0.5,
+                          ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Join the Kigali community',
+                          style: TextStyle(fontSize: 12, color: _textDim),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  _label('Display Name'),
+                  const SizedBox(height: 6),
+                  _inputField(
+                    hint: 'Your full name',
+                    icon: Icons.person_outline,
+                    onChanged: (v) => _displayName = v,
+                    validator: (v) =>
+                        v != null && v.trim().isNotEmpty ? null : 'Enter your name',
+                  ),
+                  const SizedBox(height: 16),
                           'Create Account',
                           style: TextStyle(
                             fontSize: 22,
