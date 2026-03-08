@@ -1,0 +1,13 @@
+5fa3897 Stabilize Android build and explicit Firebase app initialization
+71443b6 Add web/index.html to gitignore
+69e6426 Add Firebase web configuration
+522402a Fix map for web compatibility
+82c811f Clean up comments, update project files
+eb22d65 Update AndroidManifest files
+---
+ D .dart_tool/extension_discovery/vs_code.json
+ M .dart_tool/package_graph.json
+ M .flutter-plugins-dependencies
+ M web/index.html
+?? android/.kotlin/
+?? git_state.txt
