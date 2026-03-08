@@ -203,12 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         final user = auth.firebaseUser;
                         if (!mounted) return;
                         if (user != null) {
-                          if (user.emailVerified) {
-                            Navigator.pushReplacementNamed(context, '/main');
-                          } else {
-                            Navigator.pushReplacementNamed(
-                                context, '/verify-email');
-                          }
+                          Navigator.pushReplacementNamed(context, '/main');
                         }
                       }
                     },
