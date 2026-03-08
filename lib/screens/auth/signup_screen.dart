@@ -213,7 +213,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (!mounted) return;
                         if (auth.firebaseUser != null) {
                           Navigator.pushReplacementNamed(
-                              context, '/verify-email');
+                              context, '/main');
                         }
                       }
                     },
