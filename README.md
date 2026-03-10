@@ -2,7 +2,7 @@
 
 A Flutter app for locating important city services and lifestyle places in Kigali, backed by Firebase Authentication and Cloud Firestore.
 
-**Core features**
+**Core features
 - Email/password authentication with verification flow.
 - User profile document stored in Firestore for each authenticated account.
 - Listings CRUD: create, read, update, and delete places/services.
@@ -12,7 +12,7 @@ A Flutter app for locating important city services and lifestyle places in Kigal
 - Bottom navigation: Directory, My Listings, Map View, Settings.
 - Settings screen with profile info and local notifications toggle simulation.
 
-**State management and architecture**
+**State management and architecture
 - `Provider` is used as the state layer.
 - UI screens do not call Firebase directly.
 - Data flow is `UI -> Provider -> Service -> Firebase` and back through provider notifications/streams.
@@ -22,7 +22,7 @@ A Flutter app for locating important city services and lifestyle places in Kigal
   - `lib/providers` for app state and async operation states.
   - `lib/screens` for presentation and navigation.
 
-**Firestore data model**
+**Firestore data model
 - `users/{uid}`
   - `email`
   - `displayName`
@@ -44,7 +44,7 @@ A Flutter app for locating important city services and lifestyle places in Kigal
   - `comment`
   - `timestamp`
 
-**Firebase setup**
+**Firebase setup
 1. Create a Firebase project.
 2. Register Android app package name: `com.example.kigali_city_directory`.
 3. Download `google-services.json` and place it in `android/app`.
@@ -77,16 +77,10 @@ service cloud.firestore {
 }
 ```
 
-**Run locally**
+** how to Run  it locally
 1. `flutter pub get`
 2. `flutter run -d <device_id>`
 
-If emulator install hangs, a reliable fallback is:
-- `adb install --no-streaming -r -t -g build/app/outputs/flutter-apk/app-debug.apk`
-
-**Notes for demo recording**
-- Keep Firebase Console visible while demonstrating auth and CRUD operations.
-- Show both app behavior and relevant service/provider code paths.
 
 **Tech stack**
 - Flutter
